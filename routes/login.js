@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
   }
   
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneRegex = /^\d{10}$/; // ปรับให้ตรงกับรูปแบบเบอร์โทรศัพท์
+  const phoneRegex = /^\d{10}$/;
 
   let sql;
   let params;
