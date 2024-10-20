@@ -19,23 +19,26 @@ router.get("/:id", (req, res) => {
 });
 
 //อัพเดตที่อยู่รับของ
-router.put("/update/address", (req, res) => {
-    const { uid, _address } = req.body;
-    db.run(
-        "UPDATE users SET receiving_address = ? WHERE uid = ?",
-        [ _address, uid],
-        function (err) {
-          handleResponse(
-            res,
-            err,
-            { message: "updated successfully" },
-            404,
-            "not found",
-            this.changes
-          );
-        }
-      );
+router.put("/set/receiving_address", (req, res) => {
+  const { uid, receiving_address } = req.body;  // ตรวจสอบว่ารับ receiving_address มาถูกต้อง
+  db.run(
+    "UPDATE users SET receiving_address = ? WHERE uid = ?",
+    [receiving_address, uid],
+    function (err) {
+      if (err) {
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการอัปเดต" });
+        return;
+      }
+
+      if (this.changes > 0) {
+        res.json({ message: "updated successfully" });
+      } else {
+        res.status(404).json({ error: "ไม่พบผู้ใช้ที่มี uid นี้" });
+      }
+    }
+  );
 });
+
 
 
 
