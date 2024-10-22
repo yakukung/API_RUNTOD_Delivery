@@ -11,7 +11,7 @@ app.use("/register", registerRouter);
 app.use("/user", userRouter);
 
 app.get("/", (req, res) => {
-    res.send("Welcome to the Runtod App API!");
+    res.send("API Runtod App ʕ⁠´⁠•⁠ᴥ⁠•⁠`⁠ʔ ท้อเด้");
 });
 
 var os = require("os");
