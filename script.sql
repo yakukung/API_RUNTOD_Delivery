@@ -18,7 +18,8 @@ CREATE TABLE users (
     receiving_address TEXT DEFAULT NULL,
     type INTEGER CHECK(type IN (0, 1)) NOT NULL,
     license_plate TEXT DEFAULT NULL UNIQUE,
-    image_profile TEXT DEFAULT NULL
+    image_profile TEXT DEFAULT NULL,
+    status INTEGER CHECK(type IN (0, 1)) DEFAULT 0
 );
 
 
@@ -27,7 +28,8 @@ CREATE TABLE orders (
     order_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- รหัสออเดอร์
     receiver_id INTEGER NOT NULL,                -- รหัสผู้รับ
     sender_id INTEGER NOT NULL,                -- รหัสผู้รับ
-    rider_id INTEGER NOT NULL,               -- รหัสไรเดอร์ที่รับออเดอร์
+    rider_id INTEGER DEFAULT NULL,               -- รหัสไรเดอร์ที่รับออเดอร์
+    location_rider TEXT DEFAULT NULL,               -- ที่อยู่ไรเดอร์
     sender_address TEXT NOT NULL,                    -- ที่อยู่ผู้ส่ง
     receiver_address TEXT NOT NULL,                    -- ที่อยู่ผู้รับ
     status INTEGER NOT NULL DEFAULT 0             -- สถานะออเดอร์
@@ -79,15 +81,24 @@ INSERT INTO users (fullname, username, email, phone, password, type, license_pla
 
 
 INSERT INTO orders (receiver_id, sender_id, rider_id, sender_address, receiver_address, status, image_status) VALUES
-    (1, 2, 3, '456 Park Ave', '123 Main St', 0, 'status1.jpg'),
-    (2, 1, 3, '123 Main St', '456 Park Ave', 1, 'status2.jpg'),
-    (1, 2, 4, '456 Park Ave', '123 Main St', 2, 'status3.jpg'),
-    (2, 1, 4, '123 Main St', '456 Park Ave', 3, 'status4.jpg');
+    (1, 2, null, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762Q+J4Q ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 0, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (1, 2, 5, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762Q+J4Q ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 2, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
 
 -- เพิ่มข้อมูลรายการสินค้าในออเดอร์ (order_items)
 INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product, image_status) VALUES
-    (1, 2, 'เสื้อผ้า', 'เสื้อยืดสีขาว ไซส์ L', 'product1.jpg', 'itemstatus1.jpg'),
-    (1, 2, 'รองเท้า', 'รองเท้าผ้าใบสีดำ เบอร์ 42', 'product2.jpg', 'itemstatus2.jpg'),
-    (2, 1, 'หนังสือ', 'หนังสือนิยาย 300 หน้า', 'product3.jpg', 'itemstatus3.jpg'),
-    (3, 2, 'อาหาร', 'อาหารกล่อง 2 กล่อง', 'product4.jpg', 'itemstatus4.jpg'),
-    (4, 1, 'อุปกรณ์อิเล็กทรอนิกส์', 'หูฟังไร้สาย', 'product5.jpg', 'itemstatus5.jpg');
+    (1, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
+
+
+
+
+
+
+
+
+
+
+                                         ตัวอย่างภาพสถานะสินค้า
+
+
+    
