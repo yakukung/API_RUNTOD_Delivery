@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
 
 //อัพเดตที่อยู่รับของ
 router.put("/set/receiving_address", (req, res) => {
-  const { uid, receiving_address } = req.body;  // ตรวจสอบว่ารับ receiving_address มาถูกต้อง
+  const { uid, receiving_address } = req.body;  
   db.run(
     "UPDATE users SET receiving_address = ? WHERE uid = ?",
     [receiving_address, uid],
@@ -37,6 +37,43 @@ router.put("/set/receiving_address", (req, res) => {
       }
     }
   );
+});
+
+// อัพเดตโปรไฟล์
+router.put("/update/profile", (req, res) => {
+  const { username, fullname, email, phone, address, password, image_profile, uid} = req.body;  
+  db.run(
+    "UPDATE users SET username = ?, fullname = ?, email = ?, phone = ?, address = ?, password = ?, image_profile = ? WHERE uid = ?",
+    [username, fullname, email, phone, address, password, image_profile, uid],
+    function (err) {
+      if (err) {
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการอัปเดต" });
+        return;
+      }
+
+      if (this.changes > 0) {
+        res.json({ message: "updated successfully" });
+      } else {
+        res.status(404).json({ error: "ไม่พบผู้ใช้ที่มี uid นี้" });
+      }
+    }
+  );
+});
+
+//ลบบัญชี
+router.delete("/account/delete/:id", (req, res) => {
+  const uid = req.params.id;
+  db.run("DELETE FROM users WHERE uid = ?", [uid], function (err) {
+    handleResponse(
+      res,
+      err,
+      { message: "ลบเรียบร้อย" },
+      404,
+      "Meeting not found",
+      this.lid
+    );
+  });
+
 });
 
 
