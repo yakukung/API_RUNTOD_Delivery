@@ -80,14 +80,17 @@ INSERT INTO users (fullname, username, email, phone, password, type, license_pla
 
 
 
-INSERT INTO orders (receiver_id, sender_id, rider_id, sender_address, receiver_address, status, image_status) VALUES
-    (1, 2, null, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 0, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
-    (1, 2, 5, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 2, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
+INSERT INTO orders (order_id, receiver_id, sender_id, rider_id, sender_address, receiver_address, status, image_status) VALUES
+    (1, 1, 2, null, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 0, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (2, 1, 2, null, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 0, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (3, 1, 2, 5,'66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 2, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
 
 -- เพิ่มข้อมูลรายการสินค้าในออเดอร์ (order_items)
 INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product, image_status) VALUES
     (1, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
-    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
+    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (2, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
+    (3, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
 
 
 
@@ -106,6 +109,8 @@ WHERE orders.status = 0;
 
 
 
+UPDATE orders SET status = 1
+WHERE order_id = 1
 
 
 
@@ -113,4 +118,35 @@ WHERE orders.status = 0;
                                          ตัวอย่างภาพสถานะสินค้า
 
 
-    
+SELECT * FROM orders WHERE status = 0
+
+
+
+SELECT 
+    orders.order_id,
+    sender.fullname AS sender_name, 
+    receiver.fullname AS receiver_name,
+    orders.sender_address,
+    orders.receiver_address,
+    orders.status,
+    (SELECT COUNT(*) FROM orders, order_items WHERE orders.order_id = order_items.order_id AND orders.status = 0) as total_orders 
+FROM orders
+JOIN users AS sender ON orders.sender_id = sender.uid
+JOIN users AS receiver ON orders.receiver_id = receiver.uid
+WHERE orders.status = 0;
+
+
+SELECT 
+    orders.order_id,
+    sender.fullname AS sender_name, 
+    receiver.fullname AS receiver_name,
+    orders.sender_address,
+    orders.receiver_address,
+    orders.status,
+    COUNT(order_items.order_id) AS total_orders  -- นับจำนวน order_items สำหรับแต่ละ order_id
+FROM orders
+JOIN users AS sender ON orders.sender_id = sender.uid
+JOIN users AS receiver ON orders.receiver_id = receiver.uid
+LEFT JOIN order_items ON orders.order_id = order_items.order_id  -- ใช้ LEFT JOIN เพื่อรวมข้อมูล
+WHERE orders.status = 0
+GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status; -- รวมกลุ่มตาม order_id

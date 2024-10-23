@@ -7,7 +7,7 @@ const handleResponse = helpers.handleResponse;
 
 //แสดงข้อมูลออเดอร์ที่ยังไม่มีไรเดอร์คนไหนรับ
 router.get("/", (req, res) => {
-    db.get(`
+    db.all(`
     SELECT 
         orders.order_id,
         sender.fullname AS sender_name, 
@@ -15,11 +15,14 @@ router.get("/", (req, res) => {
         orders.sender_address,
         orders.receiver_address,
         orders.status,
-        (SELECT COUNT(*) FROM orders WHERE status IS NOT NULL AND status != 0) as total_orders 
+        COUNT(order_items.order_id) AS total_orders
     FROM orders
     JOIN users AS sender ON orders.sender_id = sender.uid
     JOIN users AS receiver ON orders.receiver_id = receiver.uid
-    WHERE orders.status = 0;
+    LEFT JOIN order_items ON orders.order_id = order_items.order_id  -- ใช้ LEFT JOIN เพื่อรวมข้อมูล
+    WHERE orders.status = 0
+    GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status;
+    ;
     `, (err, rows) => {
         if (err) {
             return handleResponse(res, err, null, 404, "Order not found");
@@ -34,19 +37,21 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
     const id = req.params.id;
     db.get(`
-    SELECT 
+        SELECT 
         orders.order_id,
         sender.fullname AS sender_name, 
         receiver.fullname AS receiver_name,
         orders.sender_address,
         orders.receiver_address,
         orders.status,
-        (SELECT COUNT(*) FROM orders WHERE status IS NOT NULL AND status != 0) as total_orders 
+        COUNT(order_items.order_id) AS total_orders
     FROM orders
     JOIN users AS sender ON orders.sender_id = sender.uid
     JOIN users AS receiver ON orders.receiver_id = receiver.uid
+    LEFT JOIN order_items ON orders.order_id = order_items.order_id
     WHERE orders.status = 0
-    AND orders.order_id = ?;
+    AND orders.order_id = ?
+    GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status;
     `, [id],(err, rows) => {
         if (err) {
             return handleResponse(res, err, null, 404, "Order not found");
