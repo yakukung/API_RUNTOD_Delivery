@@ -4,15 +4,17 @@ const port = 3000;
 const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
 const userRouter = require("./routes/users/users");
+const userOrdersRouter = require("./routes/users/orders");
 const riderRouter = require("./routes/rider/rider");
-const riderOrderRouter = require("./routes/rider/orders");
+const riderOrdersRouter = require("./routes/rider/orders");
 
 app.use(express.json());
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 app.use("/user", userRouter);
+app.use("/user/orders", userOrdersRouter);
 app.use("/rider", riderRouter);
-app.use("/rider/orders", riderOrderRouter);
+app.use("/rider/orders", riderOrdersRouter);
 
 app.get("/", (req, res) => {
     res.send("API Runtod App ʕ⁠´⁠•⁠ᴥ⁠•⁠`⁠ʔ ท้อเด้");
