@@ -5,12 +5,14 @@ const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
 const userRouter = require("./routes/users/users");
 const riderRouter = require("./routes/rider/rider");
+const riderOrderRouter = require("./routes/rider/orders");
 
 app.use(express.json());
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 app.use("/user", userRouter);
 app.use("/rider", riderRouter);
+app.use("/rider/orders", riderOrderRouter);
 
 app.get("/", (req, res) => {
     res.send("API Runtod App ʕ⁠´⁠•⁠ᴥ⁠•⁠`⁠ʔ ท้อเด้");

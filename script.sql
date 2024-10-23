@@ -91,6 +91,18 @@ INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_prod
 
 
 
+SELECT 
+    orders.order_id,
+    sender.fullname AS sender_name, 
+    receiver.fullname AS receiver_name,
+    orders.sender_address,
+    orders.receiver_address,
+    orders.status
+FROM orders
+JOIN users AS sender ON orders.sender_id = sender.uid
+JOIN users AS receiver ON orders.receiver_id = receiver.uid
+WHERE orders.status = 0;
+
 
 
 
