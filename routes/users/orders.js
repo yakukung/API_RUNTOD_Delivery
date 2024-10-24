@@ -29,7 +29,28 @@ router.get('/order_items', (req, res) => {
     });
 });
 
+router.get("/products", (req, res) => {
+    db.all(`SELECT * FROM product`, [], (err, rows) => {
+        if (err) {
+            return handleResponse(res, err, null, 500, "ไม่สามารถดึงข้อมูลสินค้าได้");
+        }
+        return handleResponse(res, null, rows, 200, "ดึงข้อมูลสินค้าสำเร็จ");
+    });
+});
 
+router.get("/products/:uid", (req, res) => {
+    const uid = req.params.uid;
+
+    db.all(`SELECT * FROM product WHERE sender_id = ?`, [uid], (err, rows) => {
+        if (err) {
+            return handleResponse(res, err, null, 500, "ไม่สามารถดึงข้อมูลสินค้าได้");
+        }
+        if (rows.length === 0) {
+            return handleResponse(res, null, null, 404, "ไม่พบสินค้าที่ตรงกับ uid นี้");
+        }
+        return handleResponse(res, null, rows, 200, "ดึงข้อมูลสินค้าสำเร็จ");
+    });
+});
 // router.delete('/order_items/:userId', (req, res) => {
 //     // Query ดึงข้อมูลจากตาราง order_items
 //     const query = `SELECT * FROM order_items WHERE `;
@@ -80,26 +101,30 @@ router.get("/order_items/:userId", (req, res) => {
 });
 
 
-router.post("/order_items/:userId", (req, res) => {
+router.post("/products/:userId", (req, res) => {
     const userId = req.params.userId;
-    const { order_id = null, sender_id, name_item, detail_item, image_product, image_status } = req.body;
+    const { sender_id, name_product, detail_product, image_product } = req.body;
 
-    if (!sender_id || !name_item || !detail_item || !image_product || !image_status) {
+    // ตรวจสอบข้อมูลที่จำเป็น
+    if (!sender_id || !name_product || !detail_product || !image_product) {
         return handleResponse(res, null, null, 400, "ข้อมูลไม่ครบถ้วน");
     }
 
+    // เพิ่มข้อมูลลงในตาราง product
     db.run(`
-        INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product, image_status, created_date)
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
-    `, [order_id, sender_id, name_item, detail_item, image_product, image_status], function(err) {
+        INSERT INTO product (sender_id, name_product, detail_product, image_product, created_date)
+        VALUES (?, ?, ?, ?, datetime('now'))
+    `, [sender_id, name_product, detail_product, image_product], function(err) {
         if (err) {
-            return handleResponse(res, err, null, 500, "ไม่สามารถสร้าง order item ได้");
+            return handleResponse(res, err, null, 500, "ไม่สามารถสร้างสินค้าได้");
         }
 
-        const newOrderItemId = this.lastID;
-        return handleResponse(res, null, { order_item_id: newOrderItemId }, 201, "สร้าง order item สำเร็จ");
+        // ดึง product_id ที่เพิ่งถูกสร้าง
+        const newProductId = this.lastID;
+        return handleResponse(res, null, { product_id: newProductId }, 201, "สร้างสินค้าเรียบร้อยแล้ว");
     });
 });
+
 
 router.put("/order_items/:userId/:orderItemId", (req, res) => {
     const userId = req.params.userId;
@@ -156,4 +181,22 @@ router.delete("/order_items/:userId/:orderItemId", (req, res) => {
         return handleResponse(res, null, { message: "ลบ order item สำเร็จ" }, 200, "ลบ order item สำเร็จ");
     });
 });
+
+// DELETE product by product_id
+router.delete("/products/:productId", (req, res) => {
+    const productId = req.params.productId;
+
+    db.run(`DELETE FROM product WHERE product_id = ?`, [productId], function (err) {
+        if (err) {
+            return handleResponse(res, err, null, 500, "ไม่สามารถลบสินค้าได้");
+        }
+        
+        if (this.changes === 0) {
+            return handleResponse(res, null, null, 404, "ไม่พบสินค้าที่ต้องการลบ");
+        }
+
+        return handleResponse(res, null, null, 200, "ลบสินค้าสำเร็จ");
+    });
+});
+
 module.exports = router;
