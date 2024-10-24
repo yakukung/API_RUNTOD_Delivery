@@ -35,7 +35,6 @@ router.get("/order_items/:userId", (req, res) => {
             order_items.name_item,
             order_items.detail_item,
             order_items.image_product,
-            order_items.image_status,
             order_items.created_date
         FROM 
             order_items 

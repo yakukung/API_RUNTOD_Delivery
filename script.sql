@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS status_delivery;
 
 DROP TRIGGER IF EXISTS update_orders_timestamp;
 
@@ -50,11 +51,11 @@ CREATE TABLE order_items (
     name_item TEXT NOT NULL,                 -- ชื่อสินค้า
     detail_item TEXT NOT NULL,                  -- รายละเอียดสินค้า
     image_product TEXT NOT NULL,                -- ที่อยู่ภาพสินค้า
-    image_status TEXT NOT NULL,                    -- ที่อยู่ภาพประกอบสถานะ
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP,    -- วันเวลาที่เพิ่มรายการสินค้า
     FOREIGN KEY (sender_id) REFERENCES users(uid),
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
+
 
 CREATE TRIGGER update_orders_timestamp 
     AFTER UPDATE ON orders
@@ -64,6 +65,14 @@ BEGIN
     WHERE order_id = NEW.order_id;
 END;
 
+
+CREATE TABLE status_delivery (
+    sd_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL, 
+    status INTEGER CHECK(status IN (2, 3)) NOT NULL,
+    image_status TEXT DEFAULT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
 
 
 --ผู้ใช้ระบบ
@@ -86,11 +95,11 @@ INSERT INTO orders (order_id, receiver_id, sender_id, rider_id, sender_address, 
     (3, 1, 2, 5,'66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 2, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
 
 -- เพิ่มข้อมูลรายการสินค้าในออเดอร์ (order_items)
-INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product, image_status) VALUES
-    (1, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
-    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
-    (2, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
-    (3, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
+INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product) VALUES
+    (1, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748'),
+    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff'),
+    (2, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748'),
+    (3, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff');
 
 
 
@@ -109,7 +118,7 @@ WHERE orders.status = 0;
 
 
 
-UPDATE orders SET status = 1
+UPDATE orders SET rider = 1
 WHERE order_id = 1
 
 
@@ -150,3 +159,19 @@ JOIN users AS receiver ON orders.receiver_id = receiver.uid
 LEFT JOIN order_items ON orders.order_id = order_items.order_id  -- ใช้ LEFT JOIN เพื่อรวมข้อมูล
 WHERE orders.status = 0
 GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status; -- รวมกลุ่มตาม order_id
+
+
+SELECT 
+            orders.order_id,
+            sender.fullname AS sender_name, 
+            receiver.fullname AS receiver_name,
+            orders.sender_address,
+            orders.receiver_address,
+            orders.status,
+            COUNT(order_items.order_id) AS total_orders
+        FROM orders
+        JOIN users AS sender ON orders.sender_id = sender.uid
+        JOIN users AS receiver ON orders.receiver_id = receiver.uid
+        LEFT JOIN order_items ON orders.order_id = order_items.order_id
+        WHERE orders.rider_id = 5
+        GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status
