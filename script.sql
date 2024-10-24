@@ -120,7 +120,7 @@ INSERT INTO order_items (order_id, product_id, sender_id) VALUES
 
 
 
-    SELECT * FROM product, order_items WHERE product.product_id = order_items.order_item_id
+ 
 
 
     
