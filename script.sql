@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS status_delivery;
+DROP TABLE IF EXISTS product;
+
 
 DROP TRIGGER IF EXISTS update_orders_timestamp;
 
@@ -20,7 +22,7 @@ CREATE TABLE users (
     type INTEGER CHECK(type IN (0, 1)) NOT NULL,
     license_plate TEXT DEFAULT NULL UNIQUE,
     image_profile TEXT DEFAULT NULL,
-    status INTEGER CHECK(type IN (0, 1)) DEFAULT 0
+    status INTEGER CHECK(status IN (0, 1)) DEFAULT 0
 );
 
 
@@ -47,13 +49,22 @@ CREATE TABLE orders (
 CREATE TABLE order_items (
     order_item_id INTEGER PRIMARY KEY AUTOINCREMENT, -- รหัสรายการสินค้า
     order_id INTEGER NOT NULL,                       -- รหัสออเดอร์
+    product_id INTEGER NOT NULL,                       -- รหัสสินค้า
     sender_id TEXT NOT NULL,                    -- idผู้ส่ง
-    name_item TEXT NOT NULL,                 -- ชื่อสินค้า
-    detail_item TEXT NOT NULL,                  -- รายละเอียดสินค้า
-    image_product TEXT NOT NULL,                -- ที่อยู่ภาพสินค้า
     created_date DATETIME DEFAULT CURRENT_TIMESTAMP,    -- วันเวลาที่เพิ่มรายการสินค้า
     FOREIGN KEY (sender_id) REFERENCES users(uid),
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+-- สร้างตาราง order_items สำหรับเก็บรายการสินค้าในแต่ละออเดอร์
+CREATE TABLE product (
+    product_id INTEGER PRIMARY KEY AUTOINCREMENT, -- รหัสรสินค้า
+    sender_id INTEGER NOT NULL,                   -- idผู้ส่ง
+    name_product TEXT NOT NULL,                 -- ชื่อสินค้า
+    detail_product TEXT NOT NULL,                  -- รายละเอียดสินค้า
+    image_product TEXT NOT NULL,                -- ที่อยู่ภาพสินค้า
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,    -- วันเวลาที่เพิ่มรายการสินค้า
+    FOREIGN KEY (sender_id) REFERENCES users(uid)
 );
 
 
@@ -94,12 +105,15 @@ INSERT INTO orders (order_id, receiver_id, sender_id, rider_id, sender_address, 
     (2, 1, 2, null, '66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 0, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada'),
     (3, 1, 2, 5,'66XV+85P 2202 ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', '762V+63H ตำบล ขามเรียง อำเภอกันทรวิชัย มหาสารคาม 44150 ประเทศไทย, , ตำบล ขามเรียง, 44150, ประเทศไทย', 2, 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.31.04.png?alt=media&token=ed447141-8754-42b6-9574-80bcc3657ada');
 
--- เพิ่มข้อมูลรายการสินค้าในออเดอร์ (order_items)
-INSERT INTO order_items (order_id, sender_id, name_item, detail_item, image_product) VALUES
-    (1, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748'),
-    (1, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff'),
-    (2, 1, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748'),
-    (3, 1, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff');
+-- เพิ่มข้อมูลสินค้า
+INSERT INTO product (sender_id, name_product, detail_product, image_product) VALUES
+    (2, 'โมเดลโทปาส', 'ไม่รุ้คิดรายละเอียดไม่ออก', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.26.42.png?alt=media&token=4f213e74-bb84-43de-b7ae-f838f4bf3748'),
+    (2, 'โมเดลน้องคลี', 'ลูกสาวววว', 'https://firebasestorage.googleapis.com/v0/b/runtod-delivery.appspot.com/o/ex_data%2Fproduct%2FScreenshot%202567-10-23%20at%2003.34.25.png?alt=media&token=730e0296-87cd-4d4c-a8ed-25be3dc900ff');
 
 
-
+-- เพิ่มข้อมูลรายการสินค้าในออเดอร์
+INSERT INTO order_items (order_id, product_id, sender_id) VALUES
+    (1, 1, 2),  -- โมเดลโทปาส
+    (1, 2, 2),  -- โมเดลน้องคลี
+    (2, 1, 2),  -- โมเดลโทปาส
+    (3, 2, 2);  -- โมเดลน้องคลี
