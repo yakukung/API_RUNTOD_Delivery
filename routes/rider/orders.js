@@ -151,29 +151,29 @@ router.put("/get-job", (req, res) => {
 });
 
 //เรียกดูภาพประกอบหลักฐาน
-router.get("image/status/2/orderID/:id", (req, res) => {
+router.get("/image/status/orderID/:id", (req, res) => {
     const id = req.params.id;
 
-    db.get(`
-        SELECT 
-            o.order_id,
-            sd.status
-            sd.image_status
-        FROM orders o, status_delivery sd
+    const query = `
+        SELECT o.order_id, sd.status, sd.image_status
+        FROM orders o
+        JOIN status_delivery sd ON o.order_id = sd.order_id
         WHERE o.order_id = ?
-        AND sd.status = 2
-    `, [id], (err, rows) => {
+    `;
+
+    db.all(query, [id], (err, rows) => {
         // จัดการข้อผิดพลาดจากการดึงข้อมูล
         if (err) {
             return handleResponse(res, err, null, 500, "เกิดข้อผิดพลาด");
         }
         if (!rows || rows.length === 0) {
-            return handleResponse(res, null, null, 404, "ไม่พบ");
+            return handleResponse(res, null, null, 404, "ไม่พบข้อมูล");
         }
         // ส่งข้อมูลกลับ
         return handleResponse(res, null, rows);
     });
 });
+
 
 
 // อัพเดตภาพสถานะส่ง 2
