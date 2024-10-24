@@ -55,7 +55,7 @@ router.get("/order_items/:userId", (req, res) => {
             order_items.order_id,     
             order_items.sender_id,           
             product.name_product as name_item,    
-            product.detail_product as detail_item,       
+            product.detail_product as detail_items,       
             product.image_product,      
             order_items.created_date,             
             users.fullname AS sender_name           
