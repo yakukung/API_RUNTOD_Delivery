@@ -117,3 +117,10 @@ INSERT INTO order_items (order_id, product_id, sender_id) VALUES
     (1, 2, 2),  -- โมเดลน้องคลี
     (2, 1, 2),  -- โมเดลโทปาส
     (3, 2, 2);  -- โมเดลน้องคลี
+
+
+
+    SELECT * FROM product, order_items WHERE product.product_id = order_items.order_item_id
+
+
+    
