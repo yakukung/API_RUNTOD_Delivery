@@ -199,4 +199,37 @@ router.delete("/products/:productId", (req, res) => {
     });
 });
 
+//แสดงข้อมูล order ที่กูกเลือกดู
+router.get("/:id", (req, res) => {
+    const id = req.params.id;
+
+    db.get(`
+        SELECT 
+            orders.order_id,
+            sender.fullname AS sender_name, 
+            receiver.fullname AS receiver_name,
+            orders.sender_address,
+            orders.receiver_address,
+            orders.status,
+            COUNT(order_items.order_id) AS total_orders
+        FROM orders
+        JOIN users AS sender ON orders.sender_id = sender.uid
+        JOIN users AS receiver ON orders.receiver_id = receiver.uid
+        LEFT JOIN order_items ON orders.order_id = order_items.order_id
+        WHERE orders.order_id = ?
+        GROUP BY orders.order_id, sender.fullname, receiver.fullname, orders.sender_address, orders.receiver_address, orders.status
+    `, [id], (err, rows) => {
+        // จัดการข้อผิดพลาดจากการดึงข้อมูล
+        if (err) {
+            return handleResponse(res, err, null, 500, "เกิดข้อผิดพลาดในการดึงข้อมูลคำสั่งซื้อ");
+        }
+        // ตรวจสอบว่ามีข้อมูลคำสั่งซื้อหรือไม่
+        if (!rows || rows.length === 0) {
+            return handleResponse(res, null, null, 404, "ไม่พบคำสั่งซื้อ");
+        }
+        // ส่งข้อมูลคำสั่งซื้อกลับ
+        return handleResponse(res, null, rows);
+    });
+});
+
 module.exports = router;
