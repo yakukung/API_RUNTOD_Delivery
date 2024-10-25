@@ -232,4 +232,31 @@ router.get("/:id", (req, res) => {
     });
 });
 
+
+
+
+router.post('/confirm/:uid', (req, res) => {
+    const uid = req.params.uid; // รับ uid จาก URL params
+    const { selected_product_ids } = req.body; // รับ selected_product_ids จาก request body
+    const orderId = 1; // กำหนดรหัสออเดอร์ (ต้องได้จากที่อื่นจริง ๆ)
+
+    if (!uid || !selected_product_ids || !selected_product_ids.length) {
+        return res.status(400).json({ error: 'Invalid data' });
+    }
+
+    // เริ่ม transaction ในการเพิ่มหลายรายการ
+    db.serialize(() => {
+        const stmt = db.prepare(`INSERT INTO order_items (order_id, product_id, sender_id) VALUES (?, ?, ?)`);
+
+        // วนลูปเพื่อเพิ่มสินค้าที่ถูกเลือกทั้งหมดลงในตาราง order_items
+        selected_product_ids.forEach(productId => {
+            stmt.run(orderId, productId, uid); // ใช้ uid เป็น sender_id
+        });
+
+        stmt.finalize();
+    });
+
+    res.status(200).json({ message: 'Order confirmed successfully' });
+});
+
 module.exports = router;
