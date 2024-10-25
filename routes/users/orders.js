@@ -238,25 +238,35 @@ router.get("/:id", (req, res) => {
 router.post('/confirm/:uid', (req, res) => {
     const uid = req.params.uid; // รับ uid จาก URL params
     const { selected_product_ids } = req.body; // รับ selected_product_ids จาก request body
-    const orderId = 1; // กำหนดรหัสออเดอร์ (ต้องได้จากที่อื่นจริง ๆ)
 
     if (!uid || !selected_product_ids || !selected_product_ids.length) {
         return res.status(400).json({ error: 'Invalid data' });
     }
 
-    // เริ่ม transaction ในการเพิ่มหลายรายการ
+    // เริ่ม transaction ในการเพิ่มข้อมูล
     db.serialize(() => {
-        const stmt = db.prepare(`INSERT INTO order_items (order_id, product_id, sender_id) VALUES (?, ?, ?)`);
+        // เพิ่มข้อมูลลงในตาราง orders และรับ order_id ที่ถูกสร้างขึ้น
+        db.run(`INSERT INTO orders (sender_id) VALUES (?)`, [uid], function(err) {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to create order' });
+            }
 
-        // วนลูปเพื่อเพิ่มสินค้าที่ถูกเลือกทั้งหมดลงในตาราง order_items
-        selected_product_ids.forEach(productId => {
-            stmt.run(orderId, productId, uid); // ใช้ uid เป็น sender_id
+            const orderId = this.lastID; // รับ order_id ของ order ที่เพิ่งถูกเพิ่ม
+
+            // เตรียมคำสั่งสำหรับการเพิ่มข้อมูลลงใน order_items
+            const stmt = db.prepare(`INSERT INTO order_items (order_id, product_id, sender_id) VALUES (?, ?, ?)`);
+
+            // วนลูปเพื่อเพิ่มสินค้าที่ถูกเลือกทั้งหมดลงในตาราง order_items
+            selected_product_ids.forEach(productId => {
+                stmt.run(orderId, productId, uid); // ใช้ orderId และ uid ในการเพิ่ม
+            });
+
+            stmt.finalize();
+
+            res.status(200).json({ message: 'Order confirmed successfully' });
         });
-
-        stmt.finalize();
     });
-
-    res.status(200).json({ message: 'Order confirmed successfully' });
 });
+
 
 module.exports = router;
